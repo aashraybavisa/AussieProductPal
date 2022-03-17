@@ -1,21 +1,24 @@
 import React from 'react'
 import { NavigationContainer } from '@react-navigation/native'
-import { createStackNavigator } from '@react-navigation/stack'
+import { createDrawerNavigator } from '@react-navigation/drawer'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { DashBoardScreen } from '../Screen'
-import { Color, Screen } from '../Helper'
+import { Color, Responsive, Screen } from '../Helper'
 import { StatusBar } from 'react-native'
+import SideMenuScreen from '../Screen/SideMenu/SideMenuScreen'
+import SearchProductScreen from '../Screen/SearchProductScreen/SearchProductScreen'
 
-const RootStack = createStackNavigator()
+const RootDrawer = createDrawerNavigator()
 
 const Router = () => {
   return (
     <SafeAreaProvider>
-      <StatusBar barStyle="light-content" backgroundColor={Color.blue} />
+      <StatusBar barStyle='light-content' backgroundColor={Color.darkGreen} />
       <NavigationContainer>
-        <RootStack.Navigator headerMode="none">
-          <RootStack.Screen name={Screen.DashBoardScreen} component={DashBoardScreen} />
-        </RootStack.Navigator>
+        <RootDrawer.Navigator drawerStyle={{ width: Responsive.width(70) }} drawerContent={props => <SideMenuScreen {...props}/>} headerMode="none">
+          {/* <RootDrawer.Screen name={Screen.DashBoardScreen} component={DashBoardScreen} /> */}
+          <RootDrawer.Screen name={Screen.SearchProduct} component={SearchProductScreen} />
+        </RootDrawer.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>
   )
