@@ -17,7 +17,11 @@ const Color = {
   darkBrown: '#4d4d4d',
   skyBlue: '#07bef3',
   yellow: '#ffcd00',
-  fb: '#255d9a'
+  fb: '#255d9a',
+  darkWhite: '#f8f9fa',
+  fonty: '#121212',
+  backgroundTextColor: '#afafaf',
+  redHeart: 'red'
 }
 
 export default Color

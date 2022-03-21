@@ -1,7 +1,10 @@
 const Screen = {
   DashBoardScreen: 'DashBoardScreen',
-  SideMenu: 'SideMenuScreen',
-  SearchProduct: 'SearchProductScreen'
+  SideMenuScreen: 'SideMenuScreen',
+  SearchProductScreen: 'SearchProductScreen',
+  AddProductScreen: 'AddProductScreen',
+  BarcodeScreen: 'BarcodeScreen',
+  ProductDescriptionScreen: 'ProductDescriptionScreen'
 }
 
 export default Screen

@@ -8,7 +8,7 @@ export default class AppHeader extends PureComponent {
     return (
       <View style={styles.container}>
         {backButton ? (
-          <TouchableOpacity style={styles.backButtonView}>
+          <TouchableOpacity style={styles.backButtonView} onPress={() => this.props.navigation.goBack()} >
             <Image style={styles.backButtonImage} source={Images.backButton} resizeMode="contain" />
           </TouchableOpacity>
         ) : (

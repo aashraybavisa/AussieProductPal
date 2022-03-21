@@ -3,7 +3,8 @@ import { FlatList, Image, Text, View, TouchableOpacity } from 'react-native'
 import { TextInput } from 'react-native-gesture-handler'
 import AppHeader from '../../Component/AppHeader'
 import Container from '../../Component/Container'
-import { Images, Color, Utility } from '../../Helper'
+import { Images, Color, Utility, Screen } from '../../Helper'
+import FilterModel from './FilterModel'
 import { styles } from './SearchProductScreenStyle'
 
 export default class SearchProductScreen extends PureComponent {
@@ -91,8 +92,13 @@ export default class SearchProductScreen extends PureComponent {
           catImage: Images.map,
           catText: 'Almost Aussie'
         }
-      ]
+      ],
+      filterModalVisible: false
     }
+  }
+
+  onPressClose = () => {
+    this.setState({ filterModalVisible: false })
   }
 
   onPressFavorite = (index) => {
@@ -112,7 +118,7 @@ export default class SearchProductScreen extends PureComponent {
 
   product = ({ item, index }) => {
     return (
-      <TouchableOpacity style={styles.listTouch}>
+      <TouchableOpacity style={styles.listTouch} onPress={() => this.props.navigation.navigate(Screen.ProductDescriptionScreen)}>
         <Image style={styles.mainImage} source={{ uri: item.image }} resizeMode="contain" />
         <View style={styles.mainTextView}>
           <Text style={styles.row1}>{item.row1}</Text>
@@ -147,7 +153,12 @@ export default class SearchProductScreen extends PureComponent {
             placeholderTextColor={Color.darkGreen}
           />
         </View>
-        <TouchableOpacity style={styles.filterView}>
+        <TouchableOpacity
+          style={styles.filterView}
+          onPress={() => {
+            this.setState({ filterModalVisible: true })
+          }}
+        >
           <Image style={styles.filterImage} source={Images.filter} />
         </TouchableOpacity>
       </View>
@@ -155,6 +166,7 @@ export default class SearchProductScreen extends PureComponent {
   }
 
   render() {
+    const { filterModalVisible } = this.state
     return (
       <Container>
         <AppHeader {...this.props} />
@@ -169,6 +181,7 @@ export default class SearchProductScreen extends PureComponent {
             renderItem={this.product}
           />
         </View>
+        {filterModalVisible === true && <FilterModel onPressClose={this.onPressClose} />}
       </Container>
     )
   }

@@ -20,7 +20,14 @@ const Images = {
   dproduct: require('../Assets/Images/productc.png'),
   dlogout: require('../Assets/Images/logout.png'),
   fb: require('../Assets/Images/facebook-app-symbol.png'),
-  filter: require('../Assets/Images/filter.png')
+  filter: require('../Assets/Images/filter.png'),
+  scan: require('../Assets/Images/scan.png'),
+  checked: require('../Assets/Images/checked.png'),
+  unchecked: require('../Assets/Images/unchecked.png'),
+  plus: require('../Assets/Images/plus.png'),
+  close: require('../Assets/Images/cancel.png'),
+  dropDownIcon: require('../Assets/Images/dropdown.png'),
+  rightSign: require('../Assets/Images/check.png')
 }
 
 export default Images

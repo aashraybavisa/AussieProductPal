@@ -2,7 +2,8 @@ import React, { PureComponent } from 'react'
 import { FlatList, Image, Text, View, ScrollView, TouchableOpacity } from 'react-native'
 import AppHeader from '../../Component/AppHeader'
 import Container from '../../Component/Container'
-import { Images, Color, Utility } from '../../Helper'
+import { Images, Color, Utility, Screen } from '../../Helper'
+import ProductDescriptionScreen from '../ProductDescriptionScreen/ProductDescriptionScreen'
 import { styles } from './DashBoardScreenStyle'
 
 export default class DashBoardScreen extends PureComponent {
@@ -29,20 +30,30 @@ export default class DashBoardScreen extends PureComponent {
     }
   }
 
-  mainButton = (img, lable) => {
+  mainButton = (img, label, onPress) => {
     return (
-      <TouchableOpacity style={styles.mainButton}>
+      <TouchableOpacity
+        style={styles.mainButton}
+        onPress={() => {
+          this.props.navigation.navigate(onPress)
+        }}
+      >
         <Image style={styles.mainButtonImage} source={img} resizeMode="contain" />
-        <Text style={styles.mainButtonText}>{lable}</Text>
+        <Text style={styles.mainButtonText}>{label}</Text>
       </TouchableOpacity>
     )
   }
 
-  categoryButton = (img, lable, color) => {
+  categoryButton = (img, label, color) => {
     return (
-      <TouchableOpacity style={[styles.categoryButton, { backgroundColor: color }]}>
+      <TouchableOpacity
+        style={[styles.categoryButton, { backgroundColor: color }]}
+        onPress={() => {
+          this.props.navigation.navigate(Screen.SearchProductScreen)
+        }}
+      >
         <Image style={styles.categoryButtonImage} source={img} resizeMode="contain" />
-        <Text style={styles.categoryButtonText}>{lable}</Text>
+        <Text style={styles.categoryButtonText}>{label}</Text>
       </TouchableOpacity>
     )
   }
@@ -58,7 +69,10 @@ export default class DashBoardScreen extends PureComponent {
     const i = index % 4
     const bcolor = arrColor[i]
     return (
-      <TouchableOpacity style={styles.latestProductButton}>
+      <TouchableOpacity
+        style={styles.latestProductButton}
+        onPress={() => this.props.navigation.navigate(Screen.ProductDescriptionScreen)}
+      >
         <View style={[styles.productImageView, { borderColor: bcolor }]}>
           <Image style={styles.productImage} source={{ uri: item.image }} resizeMode="contain" />
         </View>
@@ -81,9 +95,9 @@ export default class DashBoardScreen extends PureComponent {
         <ScrollView>
           <View style={styles.thinLine} />
           <View style={styles.mainButtonView}>
-            {this.mainButton(Images.qrCode, 'Scan Barcode')}
-            {this.mainButton(Images.search, 'Search & Browse')}
-            {this.mainButton(Images.product, 'Add Product')}
+            {this.mainButton(Images.qrCode, 'Scan Barcode', Screen.BarcodeScreen)}
+            {this.mainButton(Images.search, 'Search & Browse', Screen.SearchProductScreen)}
+            {this.mainButton(Images.product, 'Add Product', Screen.AddProductScreen)}
           </View>
           <View style={styles.thickLine} />
           <Text style={styles.bigText}>Product Categories</Text>
