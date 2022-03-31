@@ -46,10 +46,10 @@ export default class ProductDescriptionScreen extends PureComponent {
             ))}
           </Swiper>
           <Text style={styles.typeText}>{'Snacks > Pasta'}</Text>
-          <TouchableOpacity style={styles.mainButton}>
+          <View style={styles.mainButton}>
             <Image style={styles.mainButtonImage} source={Images.heart} resizeMode="contain" />
             <Text style={styles.mainButtonText}>{selectedCategory}</Text>
-          </TouchableOpacity>
+          </View>
           <Text style={styles.desTitleText}>Description</Text>
           <View style={styles.shortLineUpper} />
           <Text style={styles.desText}>

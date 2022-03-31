@@ -19,7 +19,8 @@ export const styles = StyleSheet.create({
   titleText: {
     fontSize: Responsive.font(6.5),
     flex: 1,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    color: Color.black
   },
   heartView: {
     width: Responsive.width(7),
