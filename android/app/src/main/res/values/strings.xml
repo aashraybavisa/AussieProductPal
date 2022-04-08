@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Aussie Product Pal</string>
+    <string name="facebook_app_id">1158265001342420</string>
+    <string name="fb_login_protocol_scheme">fb1158265001342420</string>
 </resources>

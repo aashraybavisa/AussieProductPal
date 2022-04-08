@@ -1,4 +1,6 @@
 const Screen = {
+  MainStack: 'MainStack',
+  LoginScreen: 'LoginScreen',
   DashBoardScreen: 'DashBoardScreen',
   SideMenuScreen: 'SideMenuScreen',
   SearchProductScreen: 'SearchProductScreen',

@@ -133,19 +133,24 @@ export default class AddProductScreen extends PureComponent {
     return (
       <View style={styles.fromDropDownMainView}>
         <TouchableOpacity style={styles.brandTouch}>
-          <View style={styles.brandView} pointerEvents='none'>
-            <TextInput style={styles.brandTextInput} placeholder='Brand' />
+          <View style={styles.brandView} pointerEvents="none">
+            <TextInput style={styles.brandTextInput} placeholder="Brand" />
           </View>
-          <Image style={styles.triangle} source={Images.dropDownIcon} resizeMode='contain' />
+          <Image style={styles.triangle} source={Images.dropDownIcon} resizeMode="contain" />
         </TouchableOpacity>
         <TouchableOpacity style={styles.brandTouch}>
-          <View style={styles.brandView} pointerEvents='none'>
-            <TextInput style={styles.brandTextInput} placeholder='Product Category' />
+          <View style={styles.brandView} pointerEvents="none">
+            <TextInput style={styles.brandTextInput} placeholder="Product Category" />
           </View>
-          <Image style={styles.triangle} source={Images.dropDownIcon} resizeMode='contain' />
+          <Image style={styles.triangle} source={Images.dropDownIcon} resizeMode="contain" />
         </TouchableOpacity>
-        <TextInput style={styles.productNameView} placeholder='Product Name' />
-        <TextInput style={styles.productDiscriptionView} placeholder='Product Description' multiline={true} textAlignVertical='top' />
+        <TextInput style={styles.productNameView} placeholder="Product Name" />
+        <TextInput
+          style={styles.productDiscriptionView}
+          placeholder="Product Description"
+          multiline={true}
+          textAlignVertical="top"
+        />
         <TouchableOpacity style={styles.submitButtonView}>
           <Text style={styles.submitButtonText}>Submit</Text>
         </TouchableOpacity>
@@ -157,7 +162,7 @@ export default class AddProductScreen extends PureComponent {
     return (
       <Container>
         <AppHeader backButton {...this.props} />
-        <KeyboardAwareScrollView style={styles.mainView}>
+        <KeyboardAwareScrollView style={styles.mainView} showsVerticalScrollIndicator={false}>
           <Text style={styles.title}>Add Product</Text>
           {this.scanBarcode()}
           {this.addImage()}

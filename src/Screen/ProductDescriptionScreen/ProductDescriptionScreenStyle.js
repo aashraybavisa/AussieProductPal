@@ -12,7 +12,6 @@ export const styles = StyleSheet.create({
   },
   titleView: {
     marginTop: 20,
-    height: Responsive.height(5),
     flexDirection: 'row',
     alignItems: 'center'
   },
@@ -60,7 +59,6 @@ export const styles = StyleSheet.create({
     width: Responsive.width(95),
     height: Responsive.height(7.5),
     flexDirection: 'row',
-    backgroundColor: Color.darkGreen,
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
@@ -85,21 +83,13 @@ export const styles = StyleSheet.create({
     height: 2,
     backgroundColor: Color.darkGreen
   },
-  shortLineLower: {
-    width: Responsive.width(10),
-    height: 1,
-    backgroundColor: Color.darkGreen
-  },
   desText: {
     fontSize: Responsive.font(3.5),
     marginTop: 5,
     color: Color.black,
     marginBottom: 20
   },
-  codeText: {
-    fontSize: Responsive.font(5),
-    color: Color.black,
-    fontWeight: 'bold',
-    marginVertical: 5
+  mt20: {
+    marginTop: 20
   }
 })

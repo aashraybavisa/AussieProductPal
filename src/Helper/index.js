@@ -7,5 +7,6 @@ import Screen from './Screen'
 import Storage from './Storage'
 import CommonStyles from './CommonStyles'
 import Loader from './Loader'
+import Emitter from './Emitter'
 
-export { Color, Images, Utility, Responsive, Fonts, Screen, Storage, CommonStyles, Loader }
+export { Color, Images, Utility, Responsive, Fonts, Screen, Storage, CommonStyles, Loader, Emitter }

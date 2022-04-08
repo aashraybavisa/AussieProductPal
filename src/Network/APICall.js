@@ -1,18 +1,23 @@
 import Axios from 'axios'
-import Utility from '../Helper/Utility'
+import Config from 'react-native-config'
 
 const axiosInstance = Axios.create({
-  baseURL: '',
+  baseURL: Config.API_URL,
   timeout: 30000
 })
 
 axiosInstance.interceptors.request.use(
   (config) => {
+    if (global.userData) {
+      if (global.userData && global.userData.token) {
+        config.headers.Authorization = `Bearer ${global.userData.token}`
+      }
+    }
     console.log('axios request =>', config)
     return config
   },
   (error) => {
-    console.log('axios request error =>', error)
+    console.log('axios request error =>', error.response || error)
     return Promise.reject(error)
   }
 )
@@ -23,8 +28,7 @@ axiosInstance.interceptors.response.use(
     return config
   },
   (error) => {
-    console.log('axios response error =>', error)
-
+    console.log('axios response error =>', error.response || error)
     return Promise.reject(error)
   }
 )

@@ -61,7 +61,6 @@ export const styles = StyleSheet.create({
   },
   listTouch: {
     flexDirection: 'row',
-    height: Responsive.height(11),
     width: Responsive.width(95),
     borderRadius: 5,
     backgroundColor: Color.white,
@@ -72,12 +71,13 @@ export const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   mainImage: {
-    height: Responsive.height(8),
-    width: Responsive.width(18),
+    height: Responsive.width(15),
+    width: Responsive.width(15),
     margin: 10
   },
   mainTextView: {
-    flex: 1
+    flex: 1,
+    paddingRight: 10
   },
   row1: {
     color: Color.black,
@@ -94,10 +94,8 @@ export const styles = StyleSheet.create({
     fontSize: Responsive.font(3)
   },
   categoryView: {
-    height: Responsive.height(10),
     width: Responsive.width(22),
-    alignItems: 'flex-end',
-    justifyContent: 'space-between'
+    alignItems: 'flex-end'
   },
   heartView: {
     height: Responsive.width(8),
@@ -111,8 +109,8 @@ export const styles = StyleSheet.create({
   },
   categoryButton: {
     flexDirection: 'row',
+    marginTop: 15,
     width: Responsive.width(22.5),
-    height: Responsive.height(3.5),
     backgroundColor: Color.darkGreen,
     borderRadius: 5,
     alignItems: 'center'

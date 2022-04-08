@@ -3,7 +3,10 @@ import { FlatList, Image, Text, View, TouchableOpacity } from 'react-native'
 import { TextInput } from 'react-native-gesture-handler'
 import AppHeader from '../../Component/AppHeader'
 import Container from '../../Component/Container'
-import { Images, Color, Utility, Screen } from '../../Helper'
+import LoadingImage from '../../Component/LoadingImage'
+import { Images, Color, Screen, Loader } from '../../Helper'
+import APICall from '../../Network/APICall'
+import EndPoints from '../../Network/EndPoints'
 import FilterModel from './FilterModel'
 import { styles } from './SearchProductScreenStyle'
 
@@ -11,135 +14,148 @@ export default class SearchProductScreen extends PureComponent {
   constructor(props) {
     super(props)
     this.state = {
-      listData: [
-        {
-          image: 'https://i.ibb.co/V9DzVch/Ferrero-2x.png',
-          row1: 'Premium Chocolate',
-          row2: 'Ferrero Rocher',
-          row3: 'Snacks > Sweets',
-          selectFav: true,
-          color: Color.darkGreen,
-          catImage: Images.heart,
-          catText: '100% Aussie'
-        },
-        {
-          image: 'https://i.ibb.co/StcK247/Coke-2x.png',
-          row1: 'Coca-Cola',
-          row2: 'Pepsico',
-          row3: 'Beverages > Soft Drinks',
-          selectFav: false,
-          color: Color.skyBlue,
-          catImage: Images.kangaroo,
-          catText: 'Sky Blue'
-        },
-        {
-          image: 'https://i.ibb.co/V9DzVch/Ferrero-2x.png',
-          row1: 'Premium Chocolate',
-          row2: 'Ferrero Rocher',
-          row3: 'Snacks > Sweets',
-          selectFav: true,
-          color: Color.blackShade,
-          catImage: Images.ship,
-          catText: '100% Imported'
-        },
-        {
-          image: 'https://i.ibb.co/StcK247/Coke-2x.png',
-          row1: 'Coca-Cola',
-          row2: 'Pepsico',
-          row3: 'Beverages > Soft Drinks',
-          selectFav: false,
-          color: Color.yellow,
-          catImage: Images.map,
-          catText: 'Almost Aussie'
-        },
-        {
-          image: 'https://i.ibb.co/V9DzVch/Ferrero-2x.png',
-          row1: 'Premium Chocolate',
-          row2: 'Ferrero Rocher',
-          row3: 'Snacks > Sweets',
-          selectFav: true,
-          color: Color.darkGreen,
-          catImage: Images.heart,
-          catText: '100% Aussie'
-        },
-        {
-          image: 'https://i.ibb.co/StcK247/Coke-2x.png',
-          row1: 'Coca-Cola',
-          row2: 'Pepsico',
-          row3: 'Beverages > Soft Drinks',
-          selectFav: false,
-          color: Color.skyBlue,
-          catImage: Images.kangaroo,
-          catText: 'Sky Blue'
-        },
-        {
-          image: 'https://i.ibb.co/V9DzVch/Ferrero-2x.png',
-          row1: 'Premium Chocolate',
-          row2: 'Ferrero Rocher',
-          row3: 'Snacks > Sweets',
-          selectFav: true,
-          color: Color.blackShade,
-          catImage: Images.ship,
-          catText: '100% Imported'
-        },
-        {
-          image: 'https://i.ibb.co/StcK247/Coke-2x.png',
-          row1: 'Coca-Cola',
-          row2: 'Pepsico',
-          row3: 'Beverages > Soft Drinks',
-          selectFav: false,
-          color: Color.yellow,
-          catImage: Images.map,
-          catText: 'Almost Aussie'
-        }
-      ],
-      filterModalVisible: false
+      listData: [],
+      brand: [],
+      category: [],
+      filterModalVisible: false,
+      searchText: '',
+      filterBrand: [],
+      filterCategory: []
     }
   }
 
-  onPressClose = () => {
-    this.setState({ filterModalVisible: false })
+  async componentDidMount() {
+    const { searchText } = this.state
+    const { params } = this.props.route
+    const payload = {
+      name: searchText,
+      barcode_number: '',
+      brand_id: '',
+      sub_category_id: '',
+      category_id: '',
+      type_id: params?.typeId || ''
+    }
+    Loader.isLoading(true)
+    const endPoint = `${EndPoints.productsList}?offset=${0}&take=100`
+    const list = APICall('post', payload, endPoint, null, true)
+    const brand = APICall('get', null, EndPoints.brand)
+    const category = APICall('get', null, EndPoints.categoriesList)
+    Promise.all([list, brand, category])
+      .then((response) => {
+        let listData = []
+        let brand = []
+        let category = []
+        if (response[0].status === 200) {
+          listData = response[0].data
+        }
+        if (response[1].status === 200) {
+          brand = response[1].data
+        }
+        if (response[2].status === 200) {
+          category = response[2].data
+        }
+        this.setState({ listData, brand, category })
+        Loader.isLoading(false)
+      })
+      .catch(() => Loader.isLoading(false))
   }
 
-  onPressFavorite = (index) => {
-    const tempData = this.state.listData
-    tempData[index].selectFav = !tempData[index].selectFav
-    this.setState({ listData: Utility.deepClone(tempData) })
+  getProductList = () => {
+    const { searchText, filterBrand, filterCategory } = this.state
+    const { params } = this.props.route
+    const payload = {
+      name: searchText,
+      barcode_number: '',
+      brand_id: filterBrand[0]?.id || '',
+      sub_category_id: '',
+      category_id: filterCategory[0]?.id || '',
+      type_id: params?.typeId || ''
+    }
+    Loader.isLoading(true)
+    const endPoint = `${EndPoints.productsList}?offset=${0}&take=100`
+    APICall('post', payload, endPoint, null, true)
+      .then((response) => {
+        Loader.isLoading(false)
+        if (response.status === 200) {
+          this.setState({ listData: response.data })
+        }
+      })
+      .catch(() => Loader.isLoading(false))
   }
 
-  category = (item) => {
-    return (
-      <View style={[styles.categoryButton, { backgroundColor: item.color }]}>
-        <Image style={styles.categoryButtonImage} source={item.catImage} resizeMode="contain" />
-        <Text style={styles.categoryButtonText}>{item.catText}</Text>
-      </View>
+  onPressClose = (brand, category) => {
+    this.setState(
+      { filterModalVisible: false, filterBrand: brand, filterCategory: category },
+      () => {
+        this.getProductList()
+      }
     )
   }
 
+  onPressClear = () => {
+    this.setState({ filterBrand: [], filterCategory: [] })
+  }
+
+  onPressFavorite = (index) => {
+    if (!global.isLogin) {
+      this.props.navigation.navigate(Screen.LoginScreen)
+    }
+  }
+
   product = ({ item, index }) => {
+    const color =
+      item.type_id === 22
+        ? Color.darkGreen
+        : item.type_id === 21
+        ? Color.yellow
+        : item.type_id === 20
+        ? Color.skyBlue
+        : Color.blackShade
+    const icon =
+      item.type_id === 22
+        ? Images.ship
+        : item.type_id === 21
+        ? Images.map
+        : item.type_id === 20
+        ? Images.kangaroo
+        : Images.heart
     return (
-      <TouchableOpacity style={styles.listTouch} onPress={() => this.props.navigation.navigate(Screen.ProductDescriptionScreen)}>
-        <Image style={styles.mainImage} source={{ uri: item.image }} resizeMode="contain" />
+      <TouchableOpacity
+        style={styles.listTouch}
+        onPress={() => this.props.navigation.navigate(Screen.ProductDescriptionScreen, { item })}
+      >
+        <LoadingImage style={styles.mainImage} url={item.image} resizeMode="contain" />
         <View style={styles.mainTextView}>
-          <Text style={styles.row1}>{item.row1}</Text>
-          <Text style={styles.row2}>{item.row2}</Text>
-          <Text style={styles.row3}>{item.row3}</Text>
+          <Text style={styles.row1} numberOfLines={2}>
+            {item.name}
+          </Text>
+          <Text style={styles.row2} numberOfLines={2}>
+            {item.brand_name}
+          </Text>
+          <Text
+            style={styles.row3}
+            numberOfLines={2}
+          >{`${item.category_name} > ${item.sub_category_name}`}</Text>
         </View>
         <View style={styles.categoryView}>
           <TouchableOpacity style={styles.heartView} onPress={() => this.onPressFavorite(index)}>
             <Image
-              style={[styles.heartImage, { tintColor: item.color }]}
-              source={item.selectFav ? Images.filledHeart : Images.emptyHeart}
+              style={[styles.heartImage, { tintColor: color }]}
+              source={item.isWishlist ? Images.filledHeart : Images.emptyHeart}
               resizeMode="contain"
             />
           </TouchableOpacity>
-          {this.category(item)}
+          <View style={[styles.categoryButton, { backgroundColor: color }]}>
+            <Image style={styles.categoryButtonImage} source={icon} resizeMode="contain" />
+            <Text style={styles.categoryButtonText}>{item.type_name}</Text>
+          </View>
         </View>
       </TouchableOpacity>
     )
   }
 
   search = () => {
+    const { searchText } = this.state
     return (
       <View style={styles.searchMainView}>
         <View style={styles.searchView}>
@@ -151,6 +167,11 @@ export default class SearchProductScreen extends PureComponent {
             style={styles.searchTextInput}
             placeholder="Search your Product"
             placeholderTextColor={Color.darkGreen}
+            onChangeText={(searchText) => this.setState({ searchText })}
+            underlineColorAndroid="transparent"
+            returnKeyType="search"
+            value={searchText}
+            onSubmitEditing={() => this.getProductList()}
           />
         </View>
         <TouchableOpacity
@@ -165,8 +186,10 @@ export default class SearchProductScreen extends PureComponent {
     )
   }
 
+  // renderFooter = () =>
+
   render() {
-    const { filterModalVisible } = this.state
+    const { filterModalVisible, brand, category, filterBrand, filterCategory } = this.state
     return (
       <Container>
         <AppHeader {...this.props} />
@@ -176,12 +199,21 @@ export default class SearchProductScreen extends PureComponent {
           <FlatList
             data={this.state.listData}
             extraData={this.state}
-            keyExtractor={(item, index) => `item-${index}`}
+            keyExtractor={(_, index) => `item-${index}`}
             showsVerticalScrollIndicator={false}
             renderItem={this.product}
           />
         </View>
-        {filterModalVisible === true && <FilterModel onPressClose={this.onPressClose} />}
+        {filterModalVisible && (
+          <FilterModel
+            onPressClose={this.onPressClose}
+            onPressClear={this.onPressClear}
+            brand={brand}
+            category={category}
+            filterBrand={filterBrand}
+            filterCategory={filterCategory}
+          />
+        )}
       </Container>
     )
   }

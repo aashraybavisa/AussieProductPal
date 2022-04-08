@@ -26,7 +26,7 @@ class AppLoader extends Component {
       >
         <View style={styles.container}>
           <View style={styles.innerContainer}>
-            <ActivityIndicator color={Color.themeGreen} size="large" />
+            <ActivityIndicator color={Color.darkGreen} size="large" />
           </View>
         </View>
       </Modal>
@@ -45,8 +45,8 @@ const styles = StyleSheet.create({
     backgroundColor: Color.modalOverlay
   },
   innerContainer: {
-    width: Responsive.widthPx(25),
-    height: Responsive.widthPx(25),
+    width: Responsive.width(25),
+    height: Responsive.width(25),
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'white',

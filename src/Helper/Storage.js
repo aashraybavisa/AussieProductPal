@@ -2,7 +2,9 @@ import AsyncStorage from '@react-native-community/async-storage'
 
 const setUserData = async (userData) => {
   try {
-    await AsyncStorage.setItem('@userData', JSON.stringify(userData))
+    global.userData = userData
+    global.isLogin = true
+    AsyncStorage.setItem('@userData', JSON.stringify(userData))
   } catch (e) {
     console.log(e)
   }
@@ -10,9 +12,12 @@ const setUserData = async (userData) => {
 
 const getUserData = async () => {
   try {
+    global.userData = null
+    global.isLogin = false
     const value = await AsyncStorage.getItem('@userData')
     if (value !== null) {
-      return JSON.parse(value)
+      global.isLogin = true
+      global.userData = JSON.parse(value)
     }
     return null
   } catch (e) {
@@ -22,6 +27,8 @@ const getUserData = async () => {
 
 const logout = async () => {
   try {
+    global.userData = null
+    global.isLogin = false
     AsyncStorage.removeItem('@userData')
   } catch (e) {
     console.log(e)

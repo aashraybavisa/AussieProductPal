@@ -2,50 +2,71 @@ import React, { PureComponent } from 'react'
 import { View, StyleSheet, Image, TouchableOpacity, Text, FlatList, Modal } from 'react-native'
 import Container from '../../Component/Container'
 import { Color, Images, Responsive, Utility } from '../../Helper'
+import _ from 'lodash'
 
 export default class FilterModel extends PureComponent {
   constructor(props) {
     super(props)
     this.state = {
       buttonActive: 'Brand',
-      list1: [
-        { name: 'Coca cola', type: '200', selected: false },
-        { name: 'Lays', type: '400', selected: true },
-        { name: 'Coca cola', type: '200', selected: false },
-        { name: 'Lays', type: '400', selected: true },
-        { name: 'Coca cola', type: '200', selected: false },
-        { name: 'Lays', type: '400', selected: true },
-        { name: 'Coca cola', type: '200', selected: false },
-        { name: 'Lays', type: '400', selected: true }
-      ],
-      list2: [
-        { name: 'Wafers', type: '100', selected: false },
-        { name: 'Drinks', type: '300', selected: true },
-        { name: 'Wafers', type: '100', selected: true },
-        { name: 'Drinks', type: '300', selected: false },
-        { name: 'Wafers', type: '100', selected: false },
-        { name: 'Drinks', type: '300', selected: true },
-        { name: 'Wafers', type: '100', selected: true },
-        { name: 'Drinks', type: '300', selected: false },
-        { name: 'Wafers', type: '100', selected: false },
-        { name: 'Drinks', type: '300', selected: true },
-        { name: 'Wafers', type: '100', selected: true },
-        { name: 'Drinks', type: '300', selected: false }
-      ]
+      brand: [],
+      category: []
     }
   }
 
-  onPress = (index) => {
-    const { buttonActive } = this.state
-    if (buttonActive === 'Brand') {
-      const tempData = this.state.list1
-      tempData[index].selected = !tempData[index].selected
-      this.setState({ list1: Utility.deepClone(tempData) })
-    } else if (buttonActive === 'Category') {
-      const tempData = this.state.list2
-      tempData[index].selected = !tempData[index].selected
-      this.setState({ list2: Utility.deepClone(tempData) })
+  componentDidMount() {
+    this.setFilterData()
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps !== this.props) {
+      this.setFilterData()
     }
+  }
+
+  setFilterData = () => {
+    const { brand, category, filterBrand, filterCategory } = this.props
+    let tempBrand = _.map(brand, (item) => ({ ...item, isSelect: false }))
+    let tempCategory = _.map(category, (item) => ({ ...item, isSelect: false }))
+    tempBrand = _.orderBy([...tempBrand, ...filterBrand], 'name')
+    tempCategory = _.orderBy([...tempCategory, ...filterCategory], 'name')
+    this.setState({
+      brand: [...tempBrand],
+      category: tempCategory
+    })
+  }
+
+  onPress = (index) => {
+    const { buttonActive, brand, category } = this.state
+    if (buttonActive === 'Brand') {
+      const tempData = _.map(brand, (item) => ({ ...item, isSelect: false }))
+      tempData[index].isSelect = !tempData[index].isSelect
+      this.setState({ brand: Utility.deepClone(tempData) })
+    } else if (buttonActive === 'Category') {
+      const tempData = _.map(category, (item) => ({ ...item, isSelect: false }))
+      tempData[index].isSelect = !tempData[index].isSelect
+      this.setState({ category: Utility.deepClone(tempData) })
+    }
+  }
+
+  onClearSelection = () => {
+    const { onPressClear } = this.props
+    const { brand, category } = this.state
+    const tempBrand = _.map(brand, (item) => ({ ...item, isSelect: false }))
+    const tempCategory = _.map(category, (item) => ({ ...item, isSelect: false }))
+    this.setState({
+      brand: tempBrand,
+      category: tempCategory
+    })
+    onPressClear()
+  }
+
+  onPressClose = () => {
+    const { onPressClose } = this.props
+    const { brand, category } = this.state
+    const tempBrand = _.filter(brand, { isSelect: true })
+    const tempCategory = _.filter(category, { isSelect: true })
+    onPressClose(tempBrand, tempCategory)
   }
 
   listItem = ({ item, index }) => {
@@ -54,16 +75,14 @@ export default class FilterModel extends PureComponent {
         <Image
           style={[
             styles.itemImage,
-            item.selected === true
-              ? { tintColor: Color.darkGreen }
-              : { tintColor: Color.grayShadeBF }
+            { tintColor: item.isSelect ? Color.darkGreen : Color.grayShadeBF }
           ]}
           source={Images.rightSign}
         />
         <Text
           style={[
             styles.itemTextName,
-            item.selected === true ? { color: Color.black } : { color: Color.backgroundTextColor }
+            { color: item.isSelect ? Color.black : Color.backgroundTextColor }
           ]}
         >
           {item.name}
@@ -74,8 +93,7 @@ export default class FilterModel extends PureComponent {
   }
 
   render() {
-    const { buttonActive } = this.state
-    const {onPressClose} = this.props
+    const { buttonActive, brand, category } = this.state
     return (
       <Modal visible={true} transparent={true}>
         <Container>
@@ -90,7 +108,7 @@ export default class FilterModel extends PureComponent {
               <Image style={styles.filterImage} source={Images.filter} />
             </View>
             <Text style={styles.title}>Filter</Text>
-            <TouchableOpacity style={styles.clearAllUpView}>
+            <TouchableOpacity style={styles.clearAllUpView} onPress={this.onClearSelection}>
               <Text style={styles.clearAllUpText}>Clear All</Text>
             </TouchableOpacity>
           </View>
@@ -105,7 +123,7 @@ export default class FilterModel extends PureComponent {
                 <Text
                   style={[
                     styles.brandText,
-                    buttonActive === 'Brand' ? { color: Color.darkGreen } : { color: Color.fonty }
+                    { color: buttonActive === 'Brand' ? Color.darkGreen : Color.fonty }
                   ]}
                 >
                   Brand
@@ -135,14 +153,14 @@ export default class FilterModel extends PureComponent {
               keyExtractor={(item, index) => `item-${index}`}
               showsVerticalScrollIndicator={false}
               renderItem={this.listItem}
-              data={buttonActive === 'Brand' ? this.state.list1 : this.state.list2}
+              data={buttonActive === 'Brand' ? brand : category}
             />
           </View>
           <View style={styles.lastButtonView}>
-            <TouchableOpacity style={styles.lastCloseTouch} onPress={() => onPressClose()}>
+            <TouchableOpacity style={styles.lastCloseTouch} onPress={this.onPressClose}>
               <Text style={styles.lastCloseText}>Close</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.lastCloseTouch}>
+            <TouchableOpacity style={styles.lastCloseTouch} onPress={this.onClearSelection}>
               <Text style={styles.lastClearAllText}>ClearAll</Text>
             </TouchableOpacity>
           </View>

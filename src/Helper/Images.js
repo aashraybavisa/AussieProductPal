@@ -27,7 +27,11 @@ const Images = {
   plus: require('../Assets/Images/plus.png'),
   close: require('../Assets/Images/cancel.png'),
   dropDownIcon: require('../Assets/Images/dropdown.png'),
-  rightSign: require('../Assets/Images/check.png')
+  rightSign: require('../Assets/Images/check.png'),
+  placeholder: require('../Assets/Images/placeholder.png'),
+  background: require('../Assets/Images/background.png'),
+  bear: require('../Assets/Images/bear.png'),
+  arrow: require('../Assets/Images/arrow.png')
 }
 
 export default Images

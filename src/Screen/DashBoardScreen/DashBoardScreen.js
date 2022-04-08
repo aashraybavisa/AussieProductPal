@@ -44,12 +44,12 @@ export default class DashBoardScreen extends PureComponent {
     )
   }
 
-  categoryButton = (img, label, color) => {
+  categoryButton = (img, label, color, typeId) => {
     return (
       <TouchableOpacity
         style={[styles.categoryButton, { backgroundColor: color }]}
         onPress={() => {
-          this.props.navigation.navigate(Screen.SearchProductScreen)
+          this.props.navigation.navigate(Screen.SearchProductScreen, { typeId })
         }}
       >
         <Image style={styles.categoryButtonImage} source={img} resizeMode="contain" />
@@ -102,12 +102,12 @@ export default class DashBoardScreen extends PureComponent {
           <View style={styles.thickLine} />
           <Text style={styles.bigText}>Product Categories</Text>
           <View style={styles.categoryMainView}>
-            {this.categoryButton(Images.heart, '100% Aussie', Color.darkGreen)}
-            {this.categoryButton(Images.kangaroo, 'True Blue', Color.skyBlue)}
+            {this.categoryButton(Images.heart, '100% Aussie', Color.darkGreen, 22)}
+            {this.categoryButton(Images.kangaroo, 'True Blue', Color.skyBlue, 20)}
           </View>
           <View style={styles.categoryMainView}>
-            {this.categoryButton(Images.map, 'Almost Aussie', Color.yellow)}
-            {this.categoryButton(Images.ship, '100% Imported', Color.blackShade)}
+            {this.categoryButton(Images.map, 'Almost Aussie', Color.yellow, 21)}
+            {this.categoryButton(Images.ship, '100% Imported', Color.blackShade, 19)}
           </View>
           <View style={styles.thickLine} />
           <Text style={styles.bigText}>Latest Products</Text>
